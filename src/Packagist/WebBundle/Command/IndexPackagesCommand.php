@@ -13,6 +13,7 @@
 namespace Packagist\WebBundle\Command;
 
 use Packagist\WebBundle\Entity\Package;
+use Packagist\WebBundle\Entity\Version;
 use Packagist\WebBundle\Model\DownloadManager;
 use Packagist\WebBundle\Model\FavoriteManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -194,6 +195,9 @@ class IndexPackagesCommand extends ContainerAwareCommand
             'trendiness' => $trendiness > 0 ? log($trendiness, 10) : 0,
             # log10 of downloads + gh stars
             'popularity' => $popularity,
+            'versions' => $package->getVersions()->map(function (Version $version) {
+                return $version->getVersion();
+            })->toArray(),
             'meta' => [
                 'downloads' => $downloads['total'],
                 'downloads_formatted' => number_format($downloads['total'], 0, ',', ' '),
